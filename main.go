@@ -1,6 +1,7 @@
 package main
 
 import (
+	os "os"
 	time "time"
 
 	oto "github.com/ebitengine/oto/v3"
@@ -11,24 +12,30 @@ import (
 
 func main() {
 
+	streamUrl := ""
+	if len(os.Args) > 1 {
+		streamUrl = os.Args[1]
+		println("Reading arg: " + streamUrl)
+	} else {
+		panic("Usage: arradio-player [streamUrl]")
+	}
+
 	// Open the stream for reading. Do NOT close before you finish playing!
-	//stream, err := shoutcast.Open("http://195.242.237.14:8020/stream") // downtuned
-	stream, err := shoutcast.Open("http://148.251.92.113:8524/stream") // purerock.us
-	//stream, err := shoutcast.Open("http://94.23.109.17:8000") // dnb
+	stream, err := shoutcast.Open(streamUrl)
 	if err != nil {
-		panic("reading stream failed: " + err.Error())
+		panic("Reading stream failed: " + err.Error())
 	}
 
 	// Register a callback function to be called when song changes
 	stream.MetadataCallbackFunc = func(m *shoutcast.Metadata) {
-		println("Now listening to: ", m.StreamTitle)
+		println("** Playing", m.StreamTitle)
 	}
 
 	// Decode file. This process is done as the file plays so it won't
 	// load the whole thing into memory.
 	decodedMp3, err := mp3.NewDecoder(stream)
 	if err != nil {
-		panic("mp3.NewDecoder failed: " + err.Error())
+		panic("Decoding stream failed: " + err.Error())
 	}
 
 	// Prepare an Oto context (this will use your default audio device) that will

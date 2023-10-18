@@ -1,5 +1,7 @@
 #!/bin/bash -e
 
+DEBUG=${DEBUG:-0}
+
 # Requirements
 case $(uname -s) in
 
@@ -42,7 +44,9 @@ go clean -modcache
 go mod tidy
 
 # Debug
-go run arradio-player || echo "Exit $?"
+if [ $DEBUG -eq 1 ]; then
+    go run arradio-player http://148.251.92.113:8524/stream || echo "Exit $?"
+fi
 
 # Build executable
-go build
+go build -o arradio-player.$GOOS.$GOARCH
