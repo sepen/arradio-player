@@ -7,7 +7,7 @@ Play internet audio streams on your Terminal
 ![Code Size](https://img.shields.io/github/languages/code-size/sepen/arradio-player)
 ![Written in Go](https://img.shields.io/badge/written%20in-go-ff69b4)
 
-Initially designed as part of the [arradio](https://github.com/sepen/arradio) project. `arradio-player` is a minimalist player, which follows the KISS principle and allows you to directly play an internet stream when other players such as MPlayer, mpv or vlc are not installed.
+Initially designed as part of the [arradio](https://github.com/sepen/arradio) project, `arradio-player` is a minimalist player, which allows you to directly play an internet stream when other players such as MPlayer, mpv or vlc are not installed.
 
 ## Installation
 
