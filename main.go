@@ -15,7 +15,6 @@ func main() {
 	streamUrl := ""
 	if len(os.Args) > 1 {
 		streamUrl = os.Args[1]
-		println("Reading arg: " + streamUrl)
 	} else {
 		panic("Usage: arradio-player [streamUrl]")
 	}

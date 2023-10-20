@@ -1,38 +1,49 @@
 #!/bin/bash -e
 
 DEBUG=${DEBUG:-0}
+RELEASE=${RELEASE:-0.0.1}
 
-# Requirements
+# GOOS
 case $(uname -s) in
-
-    Linux)
-        export GOOS=linux
-        export GOARCH=amd64 # TODO: 386, arm, arm64
-        # Install Golang 1.21.x (Debian uses a deprecated 1.15.x)
-        if [ ! -d $HOME/opt/go-1.21.3 ]; then
-            mkdir -p $HOME/opt && cd $HOME/opt
-            wget -P $HOME/opt https://go.dev/dl/go1.21.3.linux-$GOARCH.tar.gz
-            tar xf go1.21.3.linux-$GOARCH.tar.gz
-            mv go go-1.21.3 && ln -s go-1.21.3 go
-        fi
-        export PATH="$HOME/opt/go/bin:$PATH"
-        export GOPATH="$HOME/.go"
-        # Cgo is required
-        export CGO_ENABLED=1
-        # ALSA is required
-        if ! dpkg -s libasound2-dev >/dev/null 2>&1; then
-            apt-get install -y libasound2-dev
-        fi
-        ;;
-
-    Darwin)
-        export GOOS=darwin
-        export GOARCH=amd64 # TODO: arm64
-        # Cgo is not required
-        export CGO_ENABLED=0
-        ;;
+  Linux)
+    export GOOS="linux"
+    # Cgo is required
+    export CGO_ENABLED=1
+    # ALSA library is required
+    # TODO: support non-debian based distros
+    if ! dpkg -s libasound2-dev >/dev/null 2>&1; then
+      sudo apt-get install -y libasound2-dev
+    fi
+    ;;
+  Darwin)
+    export GOOS="darwin"
+    # Cgo is not required
+    export CGO_ENABLED=0
+    ;;
 esac
 
+# GOARCH
+# TODO: arm, arm64
+case $(uname -m) in
+  *86)
+    export GOARCH="386"
+    ;;
+  x86_64)
+    export GOARCH="amd64"
+    ;;
+esac
+
+# Install Go 1.21.x
+if [ ! -d $HOME/opt/go ]; then
+  mkdir -p $HOME/opt
+  cd $HOME/opt
+  wget -O https://go.dev/dl/go1.21.3.$GOOS-$GOARCH.tar.gz
+  tar xf go1.21.3.$GOOS-$GOARCH.tar.gz
+  mv go
+  cd -
+fi
+export PATH="$HOME/opt/go/bin:$PATH"
+export GOPATH="$HOME/.go"
 
 # Cleanup
 go clean -modcache
@@ -49,4 +60,13 @@ if [ $DEBUG -eq 1 ]; then
 fi
 
 # Build executable
-go build -o arradio-player.$GOOS.$GOARCH
+# -s Will turn off the symbol table, so you won’t be able to use commands like `go tool nm`.
+# -w Turns off the ‘DWARF’ debugging information, so you won’t be able to set breakpoints or get
+# specific information in stacktraces. Likewise, certain profile use cases won’t work, like `pprof`.
+if [ $DEBUG -eq 1 ]; then
+  go build -o arradio-player-$RELEASE-debug.$GOOS-$GOARCH
+else
+  go build -ldflags="-s -w" -o arradio-player-$RELEASE.$GOOS-$GOARCH
+fi
+
+# End of file
