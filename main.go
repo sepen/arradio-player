@@ -1,13 +1,14 @@
 package main
 
 import (
-	os "os"
-	time "time"
+	"os"
+	"time"
+	"fmt"
 
 	oto "github.com/ebitengine/oto/v3"
 	mp3 "github.com/hajimehoshi/go-mp3"
 
-	shoutcast "github.com/romantomjak/shoutcast"
+	"github.com/romantomjak/shoutcast"
 )
 
 func main() {
@@ -16,7 +17,8 @@ func main() {
 	if len(os.Args) > 1 {
 		streamUrl = os.Args[1]
 	} else {
-		panic("Usage: arradio-player [streamUrl]")
+		fmt.Println("Usage: arradio-player [stream_url]")
+		os.Exit(0)
 	}
 
 	// Open the stream for reading. Do NOT close before you finish playing!
@@ -27,7 +29,7 @@ func main() {
 
 	// Register a callback function to be called when song changes
 	stream.MetadataCallbackFunc = func(m *shoutcast.Metadata) {
-		println("** Playing", m.StreamTitle)
+		fmt.Println(m.StreamTitle)
 	}
 
 	// Decode file. This process is done as the file plays so it won't
