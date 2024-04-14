@@ -29,7 +29,7 @@ func main() {
 
 	// Register a callback function to be called when song changes
 	stream.MetadataCallbackFunc = func(m *shoutcast.Metadata) {
-		fmt.Println(m.StreamTitle)
+		fmt.Println(">>>", m.StreamTitle)
 	}
 
 	// Decode file. This process is done as the file plays so it won't
