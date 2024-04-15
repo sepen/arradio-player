@@ -1,8 +1,10 @@
 #!/bin/bash -e
 
+GOLANG_VERSION="1.22.2"
+
 # GOARCH
 case $(uname -m) in
-  *86) export GOARCH="386" ;;
+  *86) export GOARCH="386" GOLANG_VERSION="1.21.9" ;;
   x86_64|amd64) export GOARCH="amd64" ;;
   arm) export GOARCH="arm" ;;
   arm64) export GOARCH="arm64" ;;
@@ -17,7 +19,6 @@ esac
 readonly DEBUG=${DEBUG:-0}
 readonly ARRADIO_PLAYER_VERSION="0.0.1"
 readonly ARRADIO_PLAYER_RELEASE="arradio-player-$ARRADIO_PLAYER_VERSION.$GOOS-$GOARCH"
-readonly GOLANG_VERSION="1.22.2"
 readonly GOLANG_URL="https://go.dev/dl/go$GOLANG_VERSION.$GOOS-$GOARCH.tar.gz"
 
 # Install Golang
@@ -38,12 +39,12 @@ fi
 export PATH="$HOME/opt/go/bin:$PATH"
 export GOPATH="$HOME/.go"
 
-# Check for library dependencies
+# Check for library dependencies
 case $GOOS in
-  Linux)
-    # Check for Linux distributions
+  linux)
+    # Check for Linux distributions
     if type -P dpkg >/dev/null 2>&1; then
-      # Debian based
+      # Debian based
       if type -P apt-get >/dev/null 2>&1; then 
         if ! dpkg -s libasound2-dev >/dev/null 2>&1; then
           echo "** ALSA development libraries are required **"
