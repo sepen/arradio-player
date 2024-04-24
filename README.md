@@ -1,4 +1,4 @@
-# `arradio-player`
+# [arradio-player](/)
 
 Play internet audio streams on your macOS or Linux terminal
 
@@ -7,7 +7,7 @@ Play internet audio streams on your macOS or Linux terminal
 ![Code Size](https://img.shields.io/github/languages/code-size/sepen/arradio-player)
 ![Written in Go](https://img.shields.io/badge/written%20in-go-ff69b4)
 
-`arradio-player` is a command line player initially designed as part of the [arradio](https://github.com/sepen/arradio) project.
+[arradio-player](/) is a command line player initially designed as part of the [arradio](https://github.com/sepen/arradio) project.
 
 ## Installation
 
